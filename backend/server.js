@@ -1,0 +1,28 @@
+const express = require("express");
+const dotenv = require("dotenv").config();
+const PORT = process.env.PORT;
+const app = express();
+const notesRouter = require("./routes/notes.route");
+const { errorHandler } = require("./middlewares/errors.middleware.js");
+const connectDb = require("./config/db.js");
+app.get("/", (req, res) => {
+  res.json({
+    name: "Notes API",
+    version: "v1",
+    status: "Active",
+  });
+});
+
+//connectDb
+connectDb();
+
+// Middlewares
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(errorHandler);
+app.use("/api/notes", notesRouter);
+
+// Start server
+app.listen(PORT, () => {
+  console.log("Server is running on port:", PORT);
+});
