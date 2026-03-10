@@ -86,6 +86,8 @@ const loginUser = async (req, res) => {
 // @route   GET /api/users/me
 // @access  Private
 const getUser = async (req, res) => {
+ console.log(req);
+ 
   res.status(200).json(req.user);
 };
 // Generate JWT

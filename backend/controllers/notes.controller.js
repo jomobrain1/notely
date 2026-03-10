@@ -3,7 +3,8 @@ const Note = require("../models/Note");
 // @route   GET /api/notes
 // @access  Private
 const getNotes = async (req, res) => {
-  const notes = await Note.find();
+  console.log(req);
+  const notes = await Note.find({ user: req.user.id });
   res.status(200).json({
     message: "Notes retrieved",
     success: true,
@@ -26,6 +27,7 @@ const postNotes = async (req, res) => {
     const note = await Note.create({
       title: req.body.title,
       description: req.body.description,
+      user: req.user.id,
     });
     res.status(200).json({
       message: "Notes created successfully",
@@ -51,6 +53,21 @@ const updateNote = async (req, res) => {
       success: false,
     });
   }
+  // Check for user
+  if (!req.user) {
+    res.status(404).json({
+      message: "User not found",
+      success: false,
+    });
+  }
+
+  // Make sure the logged in user matches the note user
+  if (note.user.toString() !== req.user.id) {
+    res.status(401).json({
+      message: "User not authorized",
+      success: false,
+    });
+  }
   const updatedNote = await Note.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
   });
@@ -71,6 +88,21 @@ const deleteNote = async (req, res) => {
   if (!note) {
     res.status(404).json({
       message: "Note not found",
+      success: false,
+    });
+  }
+  // Check for user
+  if (!req.user) {
+    res.status(404).json({
+      message: "User not found",
+      success: false,
+    });
+  }
+
+  // Make sure the logged in user matches the note user
+  if (note.user.toString() !== req.user.id) {
+    res.status(401).json({
+      message: "User not authorized",
       success: false,
     });
   }
