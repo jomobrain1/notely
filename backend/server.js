@@ -3,6 +3,7 @@ const dotenv = require("dotenv").config();
 const PORT = process.env.PORT;
 const app = express();
 const notesRouter = require("./routes/notes.route");
+const usersRouter = require("./routes/users.route.js");
 const { errorHandler } = require("./middlewares/errors.middleware.js");
 const connectDb = require("./config/db.js");
 app.get("/", (req, res) => {
@@ -21,6 +22,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(errorHandler);
 app.use("/api/notes", notesRouter);
+app.use("/api/users", usersRouter);
 
 // Start server
 app.listen(PORT, () => {
