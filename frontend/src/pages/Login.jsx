@@ -26,6 +26,10 @@ function Login() {
       toast.error(message);
     }
 
+    if (isSuccess) {
+      toast.success(message || "Login successful");
+    }
+
     if (isSuccess || user) {
       navigate("/");
     }

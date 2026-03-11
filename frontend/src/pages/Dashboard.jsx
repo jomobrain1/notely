@@ -1,7 +1,63 @@
-import React from "react";
+import { useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { useSelector, useDispatch } from 'react-redux'
+import NoteForm from '../components/NoteForm.jsx'
+import NoteItem from '../components/NoteItem.jsx'
+import Spinner from '../components/Spinner'
+import { getNotes, reset } from '../store/notes/noteSlice.js'
 
-const Dashboard = () => {
-  return <div>Dashboard</div>;
-};
+function Dashboard() {
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
 
-export default Dashboard;
+  const { user } = useSelector((state) => state.auth)
+  const { notes, isLoading, isError, message } = useSelector(
+    (state) => state.notes
+  )
+
+  useEffect(() => {
+    if (isError) {
+      console.log(message)
+    }
+
+    if (!user) {
+      navigate('/login', { replace: true })
+      return
+    }
+
+    dispatch(getNotes())
+
+    return () => {
+      dispatch(reset())
+    }
+  }, [user, navigate, isError, message, dispatch])
+
+  if (isLoading) {
+    return <Spinner />
+  }
+
+  return (
+    <>
+      <section className='heading'>
+        <h1>Welcome {user && user.name}</h1>
+        <p>notes Dashboard</p>
+      </section>
+
+      <NoteForm />
+
+      <section className='content'>
+        {notes.length > 0 ? (
+          <div className='notes'>
+            {notes.map((note) => (
+              <NoteItem key={note._id} note={note} />
+            ))}
+          </div>
+        ) : (
+          <h3>You have not set any notes</h3>
+        )}
+      </section>
+    </>
+  )
+}
+
+export default Dashboard
