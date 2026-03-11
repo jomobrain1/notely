@@ -6,6 +6,7 @@ const notesRouter = require("./routes/notes.route");
 const usersRouter = require("./routes/users.route.js");
 const { errorHandler } = require("./middlewares/errors.middleware.js");
 const connectDb = require("./config/db.js");
+const cors = require("cors");
 app.get("/", (req, res) => {
   res.json({
     name: "Notes API",
@@ -18,6 +19,12 @@ app.get("/", (req, res) => {
 connectDb();
 
 // Middlewares
+app.use(
+  cors({
+    credentials: true,
+    origin: process.env.FRONTEND_URL,
+  }),
+);
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(errorHandler);
