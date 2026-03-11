@@ -1,18 +1,32 @@
 import { useDispatch } from "react-redux";
+import { toast } from "react-toastify";
 import { deleteNote } from "../store/notes/noteSlice.js";
 
 function NoteItem({ note }) {
   const dispatch = useDispatch();
 
+  const handleDelete = async () => {
+    try {
+      const response = await dispatch(deleteNote(note._id)).unwrap();
+      toast.success(response.message || "Note deleted successfully");
+    } catch (error) {
+      toast.error(error || "Failed to delete note");
+    }
+  };
+
   return (
-    <div className="Note">
-      <div>{new Date(note.createdAt).toLocaleString("en-US")}</div>
-      <h2>{note.title}</h2>
+    <article className="note-card">
+      <div className="note-card-header">
+        <span className="note-date">
+          {new Date(note.createdAt).toLocaleString("en-US")}
+        </span>
+        <button onClick={handleDelete} className="close">
+          Delete
+        </button>
+      </div>
+      <h3>{note.title}</h3>
       {note.description ? <p>{note.description}</p> : null}
-      <button onClick={() => dispatch(deleteNote(note._id))} className="close">
-        X
-      </button>
-    </div>
+    </article>
   );
 }
 

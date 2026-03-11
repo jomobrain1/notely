@@ -17,8 +17,14 @@ function NoteForm() {
   };
 
   return (
-    <section className="form">
-      <form onSubmit={onSubmit}>
+    <section className="note-form-card">
+      <div className="note-form-copy">
+        <span className="section-kicker">Create note</span>
+        <h2>Add a fresh note</h2>
+        <p>Keep the title short and use the description for the detail you want to remember.</p>
+      </div>
+
+      <form onSubmit={onSubmit} className="note-form">
         <div className="form-group">
           <label htmlFor="title">Title</label>
           <input
@@ -28,6 +34,7 @@ function NoteForm() {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="Enter note title"
+            required
           />
         </div>
         <div className="form-group">
@@ -38,6 +45,8 @@ function NoteForm() {
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             placeholder="Enter note description"
+            rows="6"
+            required
           />
         </div>
         <div className="form-group">
