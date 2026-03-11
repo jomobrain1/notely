@@ -66,6 +66,25 @@ export const deleteNote = createAsyncThunk(
   },
 );
 
+// Update user note
+export const updateNote = createAsyncThunk(
+  "notes/update",
+  async ({ id, noteData }, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.user.token;
+      return await noteService.updateNote(id, noteData, token);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  },
+);
+
 export const noteSlice = createSlice({
   name: "note",
   initialState,
@@ -111,6 +130,21 @@ export const noteSlice = createSlice({
         );
       })
       .addCase(deleteNote.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+      })
+      .addCase(updateNote.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(updateNote.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.notes = state.notes.map((note) =>
+          note._id === action.payload.data._id ? action.payload.data : note,
+        );
+      })
+      .addCase(updateNote.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;

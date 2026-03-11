@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import NoteForm from '../components/NoteForm.jsx'
@@ -7,6 +7,7 @@ import Spinner from '../components/Spinner'
 import { getNotes, reset } from '../store/notes/noteSlice.js'
 
 function Dashboard() {
+  const [noteToEdit, setNoteToEdit] = useState(null)
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
@@ -58,7 +59,10 @@ function Dashboard() {
 
       <section className='dashboard-layout'>
         <aside className='dashboard-sidebar'>
-          <NoteForm />
+          <NoteForm
+            noteToEdit={noteToEdit}
+            onCancelEdit={() => setNoteToEdit(null)}
+          />
         </aside>
 
         <section className='dashboard-main'>
@@ -73,7 +77,11 @@ function Dashboard() {
           {notes.length > 0 ? (
             <div className='notes-grid'>
               {notes.map((note) => (
-                <NoteItem key={note._id} note={note} />
+                <NoteItem
+                  key={note._id}
+                  note={note}
+                  onEdit={(selectedNote) => setNoteToEdit(selectedNote)}
+                />
               ))}
             </div>
           ) : (

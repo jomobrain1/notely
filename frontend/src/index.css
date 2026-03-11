@@ -172,6 +172,13 @@ h3 {
   color: #000;
 }
 
+.btn-secondary {
+  background: #f2f4f7;
+  color: var(--ink);
+  border-color: var(--line);
+  box-shadow: none;
+}
+
 .btn-block {
   width: 100%;
   margin-bottom: 20px;
@@ -354,6 +361,11 @@ h3 {
   justify-content: space-between;
   gap: 12px;
   margin-bottom: 18px;
+}
+
+.note-actions {
+  display: flex;
+  gap: 8px;
 }
 
 .note-date {

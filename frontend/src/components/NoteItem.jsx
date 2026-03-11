@@ -2,7 +2,7 @@ import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import { deleteNote } from "../store/notes/noteSlice.js";
 
-function NoteItem({ note }) {
+function NoteItem({ note, onEdit }) {
   const dispatch = useDispatch();
 
   const handleDelete = async () => {
@@ -20,9 +20,14 @@ function NoteItem({ note }) {
         <span className="note-date">
           {new Date(note.createdAt).toLocaleString("en-US")}
         </span>
-        <button onClick={handleDelete} className="close">
-          Delete
-        </button>
+        <div className="note-actions">
+          <button onClick={() => onEdit(note)} className="close">
+            Edit
+          </button>
+          <button onClick={handleDelete} className="close">
+            Delete
+          </button>
+        </div>
       </div>
       <h3>{note.title}</h3>
       {note.description ? <p>{note.description}</p> : null}
