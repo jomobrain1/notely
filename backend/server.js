@@ -21,10 +21,13 @@ connectDb();
 // Middlewares
 app.use(
   cors({
+    origin: "*",
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
-    origin: process.env.FRONTEND_URL,
   }),
 );
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(errorHandler);

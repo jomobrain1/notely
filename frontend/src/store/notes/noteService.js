@@ -1,6 +1,7 @@
 import axios from "axios";
+import { API_URL } from "../../config/api.js";
 
-const API_URL = "http://localhost:5000/api/notes/";
+const NOTES_API_URL = `${API_URL}/notes/`;
 
 // Create new note
 const createNote = async (noteData, token) => {
@@ -10,7 +11,7 @@ const createNote = async (noteData, token) => {
     },
   };
 
-  const response = await axios.post(API_URL, noteData, config);
+  const response = await axios.post(NOTES_API_URL, noteData, config);
 
   return response.data;
 };
@@ -23,7 +24,7 @@ const getNotes = async (token) => {
     },
   };
 
-  const response = await axios.get(API_URL, config);
+  const response = await axios.get(NOTES_API_URL, config);
 
   return response.data;
 };
@@ -36,7 +37,7 @@ const deleteNote = async (noteId, token) => {
     },
   };
 
-  const response = await axios.delete(API_URL + noteId, config);
+  const response = await axios.delete(NOTES_API_URL + noteId, config);
 
   return response.data;
 };
@@ -49,7 +50,7 @@ const updateNote = async (noteId, noteData, token) => {
     },
   };
 
-  const response = await axios.put(API_URL + noteId, noteData, config);
+  const response = await axios.put(NOTES_API_URL + noteId, noteData, config);
 
   return response.data;
 };
