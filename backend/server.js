@@ -1,12 +1,14 @@
 const express = require("express");
-const dotenv = require("dotenv").config();
-const PORT = process.env.PORT;
-const app = express();
+require("dotenv").config();
 const notesRouter = require("./routes/notes.route");
 const usersRouter = require("./routes/users.route.js");
 const { errorHandler } = require("./middlewares/errors.middleware.js");
 const connectDb = require("./config/db.js");
 const cors = require("cors");
+
+const PORT = process.env.PORT || 5000;
+const app = express();
+
 app.get("/", (req, res) => {
   res.json({
     name: "Notes API",
@@ -30,11 +32,14 @@ app.use(
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(errorHandler);
 app.use("/api/notes", notesRouter);
 app.use("/api/users", usersRouter);
+app.use(errorHandler);
 
-// Start server
-app.listen(PORT, () => {
-  console.log("Server is running on port:", PORT);
-});
+if (!process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log("Server is running on port:", PORT);
+  });
+}
+
+module.exports = app;
