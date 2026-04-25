@@ -9,6 +9,32 @@ const cors = require("cors");
 const PORT = process.env.PORT || 5000;
 const app = express();
 
+const allowedOrigins = [
+  process.env.FRONTEND_URL,
+  "https://notely-frontend-sepia.vercel.app",
+  "http://localhost:5173",
+].filter(Boolean);
+
+const corsOptions = {
+  origin(origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+
+    return callback(new Error(`Origin ${origin} is not allowed by CORS`));
+  },
+  methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  optionsSuccessStatus: 204,
+};
+
+// Middlewares
+app.use(cors(corsOptions));
+app.options(/.*/, cors(corsOptions));
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+
 app.get("/", (req, res) => {
   res.json({
     name: "Notes API",
@@ -20,18 +46,6 @@ app.get("/", (req, res) => {
 //connectDb
 connectDb();
 
-// Middlewares
-app.use(
-  cors({
-    origin: "*",
-    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-    credentials: true,
-  }),
-);
-
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
 app.use("/api/notes", notesRouter);
 app.use("/api/users", usersRouter);
 app.use(errorHandler);
